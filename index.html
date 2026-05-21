@@ -365,7 +365,66 @@ f=false,w=window,d=document,v=d.querySelector('#vwoCode'),cK='_vwo_'+account_id+
             <p>&copy; 2024 Your Name. All rights reserved.</p>
         </div>
     </footer>
+     <script>
+(() => {
+    // Route config
+    const routes = {
+        "/": "home",
+        "/about": "about",
+        "/projects": "projects",
+        "/skills": "skills",
+        "/contact": "contact"
+    };
 
+    // Hide all sections
+    function hideAllSections() {
+        document.querySelectorAll("section").forEach(section => {
+            section.style.display = "none";
+        });
+    }
+
+    // Render selected route
+    function renderRoute(path) {
+        hideAllSections();
+
+        const sectionId = routes[path] || "home";
+        const section = document.getElementById(sectionId);
+
+        if (section) {
+            section.style.display = "block";
+            window.scrollTo(0, 0);
+        }
+    }
+
+    // Navigate without reload
+    function navigate(path) {
+        history.pushState({}, "", path);
+        renderRoute(path);
+    }
+
+    // Handle nav link clicks
+    document.querySelectorAll(".nav-link").forEach(link => {
+        link.addEventListener("click", e => {
+            e.preventDefault();
+
+            const href = link.getAttribute("href");
+
+            const path =
+                href === "#home" ? "/" : href.replace("#", "/");
+
+            navigate(path);
+        });
+    });
+
+    // Browser back/forward support
+    window.addEventListener("popstate", () => {
+        renderRoute(location.pathname);
+    });
+
+    // Initial load
+    renderRoute(location.pathname);
+})();
+</script>
     <script src="script.js"></script>
 </body>
 </html>

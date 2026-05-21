@@ -365,9 +365,11 @@ f=false,w=window,d=document,v=d.querySelector('#vwoCode'),cK='_vwo_'+account_id+
             <p>&copy; 2024 Your Name. All rights reserved.</p>
         </div>
     </footer>
-     <script>
+    
+<script>
 (() => {
-    // Route config
+    const BASE_PATH = "/Portfoliotest";
+
     const routes = {
         "/": "home",
         "/about": "about",
@@ -376,18 +378,20 @@ f=false,w=window,d=document,v=d.querySelector('#vwoCode'),cK='_vwo_'+account_id+
         "/contact": "contact"
     };
 
-    // Hide all sections
     function hideAllSections() {
         document.querySelectorAll("section").forEach(section => {
             section.style.display = "none";
         });
     }
 
-    // Render selected route
-    function renderRoute(path) {
+    function renderRoute(fullPath) {
         hideAllSections();
 
+        // Remove base path
+        let path = fullPath.replace(BASE_PATH, "") || "/";
+
         const sectionId = routes[path] || "home";
+
         const section = document.getElementById(sectionId);
 
         if (section) {
@@ -396,13 +400,11 @@ f=false,w=window,d=document,v=d.querySelector('#vwoCode'),cK='_vwo_'+account_id+
         }
     }
 
-    // Navigate without reload
     function navigate(path) {
-        history.pushState({}, "", path);
-        renderRoute(path);
+        history.pushState({}, "", BASE_PATH + path);
+        renderRoute(location.pathname);
     }
 
-    // Handle nav link clicks
     document.querySelectorAll(".nav-link").forEach(link => {
         link.addEventListener("click", e => {
             e.preventDefault();
@@ -410,18 +412,18 @@ f=false,w=window,d=document,v=d.querySelector('#vwoCode'),cK='_vwo_'+account_id+
             const href = link.getAttribute("href");
 
             const path =
-                href === "#home" ? "/" : href.replace("#", "/");
+                href === "#home"
+                    ? "/"
+                    : href.replace("#", "/");
 
             navigate(path);
         });
     });
 
-    // Browser back/forward support
     window.addEventListener("popstate", () => {
         renderRoute(location.pathname);
     });
 
-    // Initial load
     renderRoute(location.pathname);
 })();
 </script>
